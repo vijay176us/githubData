@@ -1,0 +1,33 @@
+name: Output data to be used in another job
+on: [workflow_dispatch]
+#   pull_request:
+#     branches:
+#       - main
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      output0: ${{ steps.step0.outputs.script-file }}
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
+    steps:
+      - name: Get git code
+        uses: actions/checkout@v2
+      - id: step0
+        run: find *.html -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+      - id: step1
+        run: echo "test=hello" >> "$GITHUB_OUTPUT"
+      - id: step2
+        run: echo "test=world" >> "$GITHUB_OUTPUT"
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - env:
+          OUTPUT0: ${{needs.job1.outputs.output0}}
+          OUTPUT1: ${{needs.job1.outputs.output1}}
+          OUTPUT2: ${{needs.job1.outputs.output2}}
+        run: | 
+          echo "$OUTPUT1 $OUTPUT2"
+          echo "$OUTPUT0"
