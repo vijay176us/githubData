@@ -31,4 +31,4 @@ jobs:
         run: | 
           echo "$OUTPUT1 $OUTPUT2"
           echo "The contents of the file $OUTPUT0 are:"
-          cat "$OUTPUT0"
+          cat $OUTPUT0
