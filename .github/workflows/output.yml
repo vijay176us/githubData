@@ -22,7 +22,7 @@ jobs:
       - id: step2
         run: echo "test=world" >> "$GITHUB_OUTPUT"
       - id: step3
-        run: echo "file_output=$(cat ./testfile.txt | sed 's/%/%25/g; s/\n/%0A/g; s/\r/%0D/g')" >> $GITHUB_OUTPUT
+        run: echo "file_output=$(cat ./testfile.txt | sed 's/%/%25/g; s/\n/%0A/g; s/\r/%0D/g; s/\ /%20/g; s/\!/%21/g')" >> $GITHUB_OUTPUT
   job2:
     runs-on: ubuntu-latest
     needs: job1
