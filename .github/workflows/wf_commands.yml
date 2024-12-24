@@ -7,11 +7,21 @@ jobs:
       - id: sets-a-secret
         name: Generate, mask, and output a secret
         run: |
-          # the_secret=$((RANDOM))
-          the_secret=$((Hello World))
+          the_secret=$((RANDOM))
           echo "the secret number without masking is $the_secret"
           echo "::add-mask::$the_secret"
           echo "secret-number=$the_secret" >> "$GITHUB_OUTPUT"
       - name: Use that secret output (protected by a mask)
         run: |
           echo "the secret number after masking is ${{ steps.sets-a-secret.outputs.secret-number }}"
+  workflow-command-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disable workflow commands
+        run: |
+          echo '::warning:: This is a warning message, to demonstrate that commands are being processed.'
+          stopMarker=$(uuidgen)
+          echo "::stop-commands::$stopMarker"
+          echo '::warning:: This will NOT be rendered as a warning, because stop-commands has been invoked.'
+          echo "::$stopMarker::"
+          echo '::warning:: This is a warning again, because stop-commands has been turned off.'
