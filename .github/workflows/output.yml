@@ -22,7 +22,12 @@ jobs:
       - id: step2
         run: echo "test=world" >> "$GITHUB_OUTPUT"
       - id: step3
-        run: echo "file_output=$(cat ./testfile.txt | sed 's/%/%25/g; s/\n/%0A/g; s/\r/%0D/g')" >> $GITHUB_OUTPUT
+        run: |
+          # Read the content of the file and escape special characters for GitHub Actions
+          file_output=$(cat ./testfile.txt | sed ':a;N;$!ba;s/%/%25/g; s/\n/%0A/g; s/\r/%0D/g')
+
+          # Append the formatted output to $GITHUB_OUTPUT
+          echo "file_output=$file_output" >> $GITHUB_OUTPUT
   job2:
     runs-on: ubuntu-latest
     needs: job1
