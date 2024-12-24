@@ -15,7 +15,7 @@ jobs:
       - name: Get git code
         uses: actions/checkout@v2
       - id: step0
-        run: find *.html -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+        run: find *.html -type f -execdir cat 'script-file={}' >> $GITHUB_OUTPUT ';'
       - id: step1
         run: echo "test=hello" >> "$GITHUB_OUTPUT"
       - id: step2
