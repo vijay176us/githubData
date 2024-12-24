@@ -8,18 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      output0: ${{ steps.step0.outputs.script-file }}
+      output0: ${{ steps.step0.outputs.index-file }}
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
+      output3: ${{ steps.step3.outputs.file_output }}
     steps:
       - name: Get git code
         uses: actions/checkout@v2
       - id: step0
-        run: find *.html -type f -execdir cat 'script-file={}' >> $GITHUB_OUTPUT ';'
+        run: find *.html -type f -execdir echo 'index-file={}' >> $GITHUB_OUTPUT ';'
       - id: step1
         run: echo "test=hello" >> "$GITHUB_OUTPUT"
       - id: step2
         run: echo "test=world" >> "$GITHUB_OUTPUT"
+      - id: step3
+        run: echo "file_output=$(cat ./index.html)" >> $GITHUB_OUTPUT
   job2:
     runs-on: ubuntu-latest
     needs: job1
@@ -30,5 +33,6 @@ jobs:
           OUTPUT2: ${{needs.job1.outputs.output2}}
         run: | 
           echo "$OUTPUT1 $OUTPUT2"
-          echo "The contents of the file $OUTPUT0 are:"
           echo "$OUTPUT0"
+      - name: Cat the output file
+        run: echo ${{needs.job1.outputs.output3}} }}
