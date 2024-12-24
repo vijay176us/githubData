@@ -17,6 +17,8 @@ jobs:
   workflow-command-job:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout the git repo
+        uses: actions/checkout@v2
       - name: Disable workflow commands
         run: |
           echo '::warning:: This is a warning message, to demonstrate that commands are being processed.'
